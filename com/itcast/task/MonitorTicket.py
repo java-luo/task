@@ -6,6 +6,5 @@ from com.itcast.utils import Const
 class MonitorTicket(baseTask):
 
     def run(self):
-        isOk = Guobo_Spider.start()
-        if (not isOk):
-            Const.task_list.remove(self)
+        Guobo_Spider.start()
+

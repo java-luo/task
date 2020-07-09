@@ -33,8 +33,6 @@ def remove_task(taskName):
 
 def create_guobo_rob(name, kw):
     taskName_list=get_taskName_list()
-    print(name)
-    print(taskName_list)
     if name in taskName_list:
         return ServerResponse.createError("任务名称不能重复,请重新命名")
     rob = RobTicket(name, kw)

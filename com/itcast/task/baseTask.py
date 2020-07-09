@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from com.itcast.utils import Const,my_message
 class baseTask(object):
     def __init__(self, name, kw=None):
         self.name = name
@@ -17,3 +17,11 @@ class baseTask(object):
 
     def run(self):
         pass
+
+    def start(self):
+        try:
+            self.run()
+        except Exception as e:
+            msg="任务:%s中止 异常原因%s" %(self.name,e)
+            my_message.ifttt_send_meaasge({"value1":msg})
+            Const.task_list.remove(self)

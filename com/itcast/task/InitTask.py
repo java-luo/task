@@ -21,7 +21,7 @@ def start_task():
     try:
         while True:
             for task in Const.task_list:
-                task.run()
+                task.start()
             time.sleep(sleep_time)
     except Exception as e:
         my_message.ifttt_send_meaasge("程序发生异常%s" % e)
@@ -32,4 +32,3 @@ def run():
     t = threading.Thread(target=start_task)
     t.start()
 
-# run()

@@ -60,24 +60,18 @@ def check_ticket_number(ticket_number, ticket_date):
         # print("日期%s 票量%s" % (ticket['t_date'], ticket['tp_last_stock_sum']))
         for t in ticket['tp']:
             if t['tp_last_stock'] < WARN_NUMBER:
-                try:
                     if RedisUtil.get(t['td_tp_id']) is None:
                         value = ticket['t_date'] + " " + ticket_date[t['tp_id']]
                         RedisUtil.set(t['td_tp_id'], value, ex_time)
                         msg = "%s日%s场,仅剩余%s张,注意关班!!!" % (ticket['t_date'], ticket_date[t['tp_id']], t['tp_last_stock'])
-                        print(msg)
-                        # todo: 上线时放开提醒
+                        #print(msg)
                         my_message.ifttt_send_meaasge({"value1": msg})
-                        # my_message.wechat_send_meaasge({"text", msg})
-                except Exception as e:
-                    my_message.ifttt_send_meaasge({"value1": e})
-                    return False
+                        my_message.wechat_send_meaasge({"text", msg})
 
-    return True
+
 
 
 def start():
     data = get_ticket()
     analysis_data = analysis(data)
-    isOk = check_ticket_number(analysis_data['ticket_number'], analysis_data['ticket_date'])
-    return isOk
+    check_ticket_number(analysis_data['ticket_number'], analysis_data['ticket_date'])
