@@ -17,11 +17,19 @@ def remove_task():
     return TaskService.remove_task(taskName)
 
 
-@task.route("/createGuoboRob")
+@task.route("/createGuoboRob", methods=['POST'])
 def create_guobo_rob():
-    name = request.args.get("taskName")
-    kw = request.args.get("kw")
+    name = request.form.get("taskName")
+    kw = request.form.get("kw")
     if name == '' or name == None:
         return ServerResponse.createError(msg="任务名称不能为空哦!")
-
     return TaskService.create_guobo_rob(name, kw)
+
+
+@task.route("/createGuoboMonitor", methods=['POST'])
+def create_guobo_monitor():
+    name = request.form.get("taskName")
+    kw = request.form.get("kw")
+    if name == '' or name == None:
+        return ServerResponse.createError(msg="任务名称不能为空哦!")
+    return TaskService.create_guobo_monitor(name, kw)

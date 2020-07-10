@@ -3,8 +3,8 @@ import requests
 
 # IFTTT提醒
 def ifttt_send_meaasge(params, addressee="https://maker.ifttt.com/trigger/request/with/key/FTpKdXF5XOciUIDdUje5s"):
-    response = requests.get(addressee, params=params)
-
+    r= requests.get(addressee, params=params)
+    return r
 
 # 微信方糖提醒
 def wechat_send_meaasge(params,

@@ -1,4 +1,5 @@
 from com.itcast.task.GuoBoRobTicket import RobTicket
+from com.itcast.task.MonitorTicket import MonitorTicket
 from com.itcast.utils import Const, ServerResponse
 
 
@@ -32,10 +33,18 @@ def remove_task(taskName):
 
 
 def create_guobo_rob(name, kw):
-    taskName_list=get_taskName_list()
+    taskName_list = get_taskName_list()
     if name in taskName_list:
         return ServerResponse.createError("任务名称不能重复,请重新命名")
     rob = RobTicket(name, kw)
     Const.task_list.append(rob)
     return ServerResponse.createSuccess()
 
+
+def create_guobo_monitor(name, kw):
+    taskName_list = get_taskName_list()
+    if name in taskName_list:
+        return ServerResponse.createError("任务名称不能重复,请重新命名")
+    monitor = MonitorTicket(name, kw)
+    Const.task_list.append(monitor)
+    return ServerResponse.createSuccess()

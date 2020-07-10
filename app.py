@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template,redirect
 
 from com.itcast.controller.GuoboController import guobo
 from com.itcast.controller.TaskController import task
@@ -13,7 +13,7 @@ InitTask.run()
 
 @app.route('/')
 def hello_world():
-    return 'Hello World Flask!'
+    return redirect("/getTicket.html")
 
 
 # 404接受页面
@@ -29,4 +29,4 @@ def page_not_found(e):
 
 
 if __name__ == '__main__':
-    app.run("0.0.0.0")
+    app.run(host="0.0.0.0")

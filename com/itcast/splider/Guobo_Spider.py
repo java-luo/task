@@ -1,6 +1,6 @@
 import requests
 
-from com.itcast.utils import RedisUtil,SpiderUtil,iniUtil,my_message
+from com.itcast.utils import RedisUtil, SpiderUtil, iniUtil, my_message
 
 headers = {
     "Referer": "http://ticket.chnmuseum.cn/yuyue/index",
@@ -60,15 +60,13 @@ def check_ticket_number(ticket_number, ticket_date):
         # print("日期%s 票量%s" % (ticket['t_date'], ticket['tp_last_stock_sum']))
         for t in ticket['tp']:
             if t['tp_last_stock'] < WARN_NUMBER:
-                    if RedisUtil.get(t['td_tp_id']) is None:
-                        value = ticket['t_date'] + " " + ticket_date[t['tp_id']]
-                        RedisUtil.set(t['td_tp_id'], value, ex_time)
-                        msg = "%s日%s场,仅剩余%s张,注意关班!!!" % (ticket['t_date'], ticket_date[t['tp_id']], t['tp_last_stock'])
-                        #print(msg)
-                        my_message.ifttt_send_meaasge({"value1": msg})
-                        my_message.wechat_send_meaasge({"text", msg})
-
-
+                if RedisUtil.get(t['td_tp_id']) is None:
+                    value = ticket['t_date'] + " " + ticket_date[t['tp_id']]
+                    RedisUtil.set(t['td_tp_id'], value, ex_time)
+                    msg = "国博%s日%s场,仅剩余%s张,注意关班!!!" % (ticket['t_date'], ticket_date[t['tp_id']], t['tp_last_stock'])
+                    # print(msg)
+                    my_message.ifttt_send_meaasge({"value1": msg})
+                    my_message.wechat_send_meaasge({"text": msg})
 
 
 def start():
