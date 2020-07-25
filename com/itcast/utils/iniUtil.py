@@ -4,7 +4,7 @@ rootPath=getRootPath()
 config = configparser.ConfigParser()
 # -read读取ini文件
 print(rootPath)
-config.read('./config.ini')
+config.read('./config.ini', encoding='GB18030')
 
 
 # 输入分组和key值 返回value
