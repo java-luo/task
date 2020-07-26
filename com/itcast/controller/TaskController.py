@@ -21,7 +21,7 @@ def remove_task():
 def create_guobo_rob():
     name = request.form.get("taskName")
     kw = request.form.get("kw")
-    if name == '' or name == None:
+    if name == '' or name is None:
         return ServerResponse.createError(msg="任务名称不能为空哦!")
     return TaskService.create_guobo_rob(name, kw)
 
@@ -30,6 +30,6 @@ def create_guobo_rob():
 def create_guobo_monitor():
     name = request.form.get("taskName")
     kw = request.form.get("kw")
-    if name == '' or name == None:
+    if name == '' or name is None:
         return ServerResponse.createError(msg="任务名称不能为空哦!")
     return TaskService.create_guobo_monitor(name, kw)

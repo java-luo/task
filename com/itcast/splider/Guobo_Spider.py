@@ -1,5 +1,6 @@
 import requests
 
+from com.itcast.service import Wx_service
 from com.itcast.utils import RedisUtil, SpiderUtil, iniUtil, my_message
 
 headers = {
@@ -57,15 +58,14 @@ def analysis(data):
 # 检查票量
 def check_ticket_number(ticket_number, ticket_date):
     for ticket in ticket_number:
-        # print("日期%s 票量%s" % (ticket['t_date'], ticket['tp_last_stock_sum']))
         for t in ticket['tp']:
             if t['tp_last_stock'] < WARN_NUMBER:
                 if RedisUtil.get(t['td_tp_id']) is None:
                     value = ticket['t_date'] + " " + ticket_date[t['tp_id']]
                     RedisUtil.set(t['td_tp_id'], value, ex_time)
                     msg = "国博%s日%s场,仅剩余%s张,注意关班!!!" % (ticket['t_date'], ticket_date[t['tp_id']], t['tp_last_stock'])
-                    # print(msg)
-                    my_message.ifttt_send_meaasge({"value1": msg})
+                    # 公众号提醒
+                    send_wx(ticket['t_date'], ticket_date[t['tp_id']], t['tp_last_stock'])
                     my_message.wechat_send_meaasge({"text": msg})
 
 
@@ -73,3 +73,29 @@ def start():
     data = get_ticket()
     analysis_data = analysis(data)
     check_ticket_number(analysis_data['ticket_number'], analysis_data['ticket_date'])
+
+
+def send_wx(date, sessions, ticketNumber):
+    user_openid_list = Wx_service.get_wx_user_list()
+    for openid in user_openid_list:
+        data = {
+            "touser": openid,
+            "template_id": "rwpJ63oVS5JRsN4J3jlkwsG2yGR8RyKfW8Jat4gP9to",
+            "url": "http://120.26.172.31/getTicket.html",
+            "topcolor": "#FF0000",
+            "data": {
+                "date": {
+                    "value": date,
+                    "color": "#173177"
+                },
+                "sessions": {
+                    "value": sessions,
+                    "color": "#173177"
+                },
+                "ticketNumber": {
+                    "value": ticketNumber,
+                    "color": "#173177"
+                }
+            }
+        }
+        Wx_service.send_template_msg(data)

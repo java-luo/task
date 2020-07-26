@@ -2,11 +2,13 @@ from flask import Flask, render_template,redirect
 
 from com.itcast.controller.GuoboController import guobo
 from com.itcast.controller.TaskController import task
+from com.itcast.controller.wxController import wx
 from com.itcast.task import InitTask
 
 app = Flask(__name__, static_url_path="")
 app.register_blueprint(guobo)
 app.register_blueprint(task)
+app.register_blueprint(wx)
 
 InitTask.run()
 
