@@ -23,7 +23,7 @@ class baseTask(object):
             self.run()
         except Exception as e:
             msg="任务:%s中止 异常原因%s" %(self.name,e)
-            my_message.ifttt_send_meaasge({"value1":msg})
-            print(msg)
+            my_message.wechat_send_meaasge({"text":msg})
+            #print(msg)
             Const.task_list.remove(self)
 

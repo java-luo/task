@@ -1,8 +1,11 @@
+import re
 import requests
-from com.itcast.utils import SpiderUtil
-from com.itcast.utils import validCodeUtil
+import time
 from bs4 import BeautifulSoup
-import re,time
+
+from com.itcast.utils import SpiderUtil
+from com.itcast.utils import my_message
+from com.itcast.utils import validCodeUtil
 
 headers = {
     "User-Agent": SpiderUtil.get_user_agent(),
@@ -28,7 +31,7 @@ def login():
     }
     loginResponse = r.post("http://ticket.cdstm.cn/login/in", json=loginData, headers=login_headers)
 
-    print("登录:",loginResponse.json())
+    #print("登录:", loginResponse.json())
 
 
 def getIndex():
@@ -37,11 +40,12 @@ def getIndex():
     b = BeautifulSoup(indexReponse.content, "html.parser")
     div = b.find("div", {"class": "calend"})
     list_i = div.find_all("i", attrs={"data-year": re.compile("/*")})
-    inData=[]
+    inData = []
     for i in list_i:
         if i.text.find("闭馆") == -1:
             inData.append(i["indate"])
     return inData
+
 
 def getTicket(Indate):
     beforeData = {
@@ -55,7 +59,7 @@ def getTicket(Indate):
         getTicket(Indate)
         return
     else:
-        print("查询票数页面:",soup.find("title").text)
+        print("查询票数页面:", soup.find("title").text)
         date = soup.find("div", {"class": "tick"}).h3.text.strip()
         date = re.findall("\d{4}-\d{2}-\d{2}", date)[0]
         try:
@@ -75,8 +79,7 @@ def getTicket(Indate):
         return ticket
 
 
-
-#获取票数
+# 获取票数
 def get_ticket_list():
     print("获取科技馆票数")
     dateList = getIndex()
@@ -90,8 +93,12 @@ def get_ticket_list():
             pass
     return ticket_list
 
+
 def keep_link():
-    res=r.get("http://ticket.cdstm.cn/user/center/baseInfo",headers=headers)
-    soup = BeautifulSoup(res.content, "html.parser")
-    title=soup.find("title").text
-    print("保持登录:",title)
+    try:
+        res = r.get("http://ticket.cdstm.cn/user/center/baseInfo", headers=headers)
+        # soup = BeautifulSoup(res.content, "html.parser")
+        # title = soup.find("title").text
+        # print("保持登录:", title)
+    except e:
+        my_message.wechat_send_meaasge({"text": e})
