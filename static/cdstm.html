@@ -4,11 +4,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>国博票量查询</title>
+    <title>科技馆票量查询</title>
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <link href="css/bootstrap.min.css" rel="stylesheet"></link>
-
 </head>
+<body>
 
 <nav class="navbar navbar-inverse ">
     <div class="container-fluid">
@@ -24,9 +24,9 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-               <li><a href="./cdstm.html" >科技馆余票查询</a></li>
+                <li><a href="./cdstm.html">科技馆余票查询</a></li>
                 <li><a href="./getTicket.html">国博余票查询</a></li>
-                <li><a href="./TaskList.html" >自动任务列表</a></li>
+                <li><a href="./TaskList.html">自动任务列表</a></li>
                 <li><a href="#" onclick="alert('还未开放')">Help</a></li>
             </ul>
         </div>
@@ -34,32 +34,32 @@
 </nav>
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Create Task</h4>
-      </div>
-      <div class="modal-body">
-      </div>
-
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Create Task</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <h2 class="sub-header">国家博物馆余票查询&nbsp</h2>
+            <h2 class="sub-header">科学技术馆余票查询&nbsp</h2>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                     <tr>
                         <th>序号</th>
                         <th>日期</th>
-                        <th>共余票</th>
-                        <th>详细</th>
+                        <th>上午</th>
+                        <th>下午</th>
                     </tr>
                     </thead>
                     <tbody id="tbody1">
@@ -75,40 +75,26 @@
 <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script>
-    $(function(){
-         getTaskList()
+    $(function () {
+        getTaskList()
     })
 
-    function getTaskList(){
-           $.get('/getTicket',function(data){
-       }).success(function(data){
-           let yy_date=data.data.yy_date;
-           var tps=data.data.tps;
-           var tickdate={}
-           for (i = 0; i < tps.length; i++) {
-               tickdate[tps[i]['tp_id']]=tps[i]['time_period_show']
-           }
-               console.log(tickdate);
+    function getTaskList() {
+        $.get('/getKejiTicket', function (data) {
+        }).success(function (data) {
+            data = data["data"]
 
-               for (i=0;i<yy_date.length;i++){
-               var $trTemp = $("<tr id=" + i + "></tr>");
-               //往行里面追加 td单元格
-               $trTemp.append("<td>" + i + "</td>");
-               $trTemp.append("<td>" + yy_date[i]['t_date'] + "</td>");
-               $trTemp.append("<td>" + yy_date[i]['tp_last_stock_sum'] + "</td>");
-               var $select=$("<select class=\"form-control\"></select>");
-               for(m=0;m<yy_date[i]['tp'].length;m++){
-                   tp_id=yy_date[i]['tp'][m]['tp_id']
-                   var msg=tickdate[tp_id] +"余票:"+yy_date[i]['tp'][m]['tp_last_stock'].toString()
-                   $select.append("<option>" +msg + "</option>");
-               }
-               $trTemp.append($select);
-               $trTemp.appendTo("#tbody1");
-
-           }
-           }).error(function () {
+            for (i = 0; i < data.length; i++) {
+                var $trTemp = $("<tr id=" + i + "></tr>");
+                $trTemp.append("<td>" + i + "</td>");
+                $trTemp.append("<td>" + data[i]["date"] + "</td>");
+                $trTemp.append("<td>" + data[i]["morning"] + "</td>");
+                $trTemp.append("<td>" + data[i]["afternoon"] + "</td>");
+                $trTemp.appendTo("#tbody1");
+                console.log(data[i])
+            }
+        }).error(function () {
         })
     }
-
 </script>
 </html>

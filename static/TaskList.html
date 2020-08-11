@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>自动化任务管理</title>
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <link href="css/bootstrap.min.css" rel="stylesheet"></link>
+
+</head>
+<body>
+ <script type="text/javascript">
+            document.write(page1.import.body.innerHTML);
+</script>
+ <nav class="navbar navbar-inverse ">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Task management platform</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+               <li><a href="./cdstm.html" >科技馆余票查询</a></li>
+                <li><a href="./getTicket.html">国博余票查询</a></li>
+                <li><a href="./TaskList.html" >自动任务列表</a></li>
+                <li><a href="#" onclick="alert('还未开放')">Help</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Create Task</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" action="/createTask">
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-2 control-label">选择任务</label>
+                        <div class="col-sm-10">
+                            <select class="form-control" name="id" id="id">
+                                <option value="1">创建美团任务</option>
+                                <option value="2">创建EBK任务</option>
+                                <option value="3">创建国博任务</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">任务名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="taskName" placeholder="任务名称" name="taskName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPassword3" class="col-sm-2 control-label">执行间隔</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="executionTime" placeholder="执行间隔"
+                                   name="executionTime">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="close">Close</button>
+                <button type="button" onclick="createTask()" class="btn btn-default">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h2 class="sub-header">Task List &nbsp</h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>任务名称</th>
+                        <th>启动时间</th>
+                        <th>已运行时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbody1">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+    $(function () {
+        getTaskList()
+    })
+
+    function removeTask(obj) {
+        $.get('/removeTask?taskName=' + obj.id, function (data) {
+        }).success(function (data) {
+            if (data.code==0) {
+                alert("删除成功")
+                id = obj.parentNode.id
+                id = "#" + id
+                $(id).remove()
+            } else {
+                alert(data.msg)
+            }
+        }).error(function () {
+            alert("删除失败")
+        })
+    }
+
+    function getTaskList() {
+        $.get('/getTaskList', function (data) {
+        }).success(function (data) {
+
+            result_tast = data.result_tast
+            for (var i = 0; i < result_tast.length; i++) {
+                //动态创建一个tr行标签,并且转换成jQuery对象
+                var $trTemp = $("<tr id=" + i + "></tr>");
+                //往行里面追加 td单元格
+                $trTemp.append("<td>" + i + "</td>");
+                $trTemp.append("<td>" + result_tast[i].taskName + "</td>");
+                $trTemp.append("<td>" + result_tast[i].statTime + "</td>");
+                $trTemp.append("<td>" + result_tast[i].executeTime + "</td>");
+                $trTemp.append('<button type="button" id=' + result_tast[i].taskName + ' data-loading-text="Loading..." class="btn btn-primary" onclick="removeTask(this)">\n' +
+                    '                            删除\n' +
+                    '                        </button>');
+
+                // $("#J_TbData").append($trTemp);
+                $trTemp.appendTo("#tbody1");
+            }
+        }).error(function () {
+            alert("获取列表失败")
+        })
+    }
+
+
+    function createTask() {
+        id = document.getElementById("id").value
+        taskName = document.getElementById("taskName").value
+        executionTime = document.getElementById("executionTime").value
+        if (taskName == null || taskName == undefined || taskName == '') {
+            alert("任务名称不能为空")
+            return
+        }
+        if (executionTime == null || executionTime == 0 || executionTime == '') {
+            alert("任务名称不能为空")
+            return
+        }
+        $.post("/createTask", {"id": id, "taskName": taskName, "executionTime": executionTime}, function (data) {
+
+        }).success(function (data) {
+            if (data == 'OK') {
+                alert("创建任务成功")
+                $('#close').click()
+                reload()
+            } else {
+                alert(data)
+            }
+        }).error(function () {
+            alert("创建任务失败")
+        })
+
+    }
+
+    function reload() {
+        $("#tbody1").empty();
+        getTaskList()
+    }
+</script>
+</html>

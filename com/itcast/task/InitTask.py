@@ -2,6 +2,7 @@ import threading
 import time
 
 from com.itcast.task.MonitorTicket import MonitorTicket
+from com.itcast.task.KejiKeepLink import KeepLinkTicket
 from com.itcast.utils import Const
 from com.itcast.utils import iniUtil
 from com.itcast.utils import my_message
@@ -11,7 +12,9 @@ from com.itcast.utils import my_message
 def init_task_list():
     # 添加任务到任务列表当中
     guobo_task = MonitorTicket("监视国博余票")
+    keep_task=KeepLinkTicket("保持科技馆在线")
     Const.task_list.append(guobo_task)
+    Const.task_list.append(keep_task)
 
 
 # 执行任务
