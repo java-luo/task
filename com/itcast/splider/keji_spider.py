@@ -44,8 +44,9 @@ def getIndex():
         if i.text.find("闭馆") == -1:
             inData.append(i["indate"])
     #去重
-    s = set(inData)
-    inData = [i for i in s]
+    l=int(len(inData)/2)
+    inData=  inData[:l]
+
     return inData
 
 
@@ -104,3 +105,6 @@ def keep_link():
         # print("保持登录:", title)
     except  Exception as e:
         my_message.wechat_send_meaasge({"text": e})
+
+
+print(getIndex())
