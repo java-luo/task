@@ -38,12 +38,14 @@ def getIndex():
     # 获取科技馆日期
     indexReponse = r.get("http://ticket.cdstm.cn/index", headers=headers)
     b = BeautifulSoup(indexReponse.content, "html.parser")
-    div = b.find("div", {"class": "calend"})
-    list_i = div.find_all("i", attrs={"data-year": re.compile("/*")})
+    list_i = b.find_all("i", attrs={"data-year": re.compile("/*")})
     inData = []
     for i in list_i:
         if i.text.find("闭馆") == -1:
             inData.append(i["indate"])
+    #去重
+    s = set(inData)
+    inData = [i for i in s]
     return inData
 
 
@@ -100,5 +102,5 @@ def keep_link():
         # soup = BeautifulSoup(res.content, "html.parser")
         # title = soup.find("title").text
         # print("保持登录:", title)
-    except e:
+    except  Exception as e:
         my_message.wechat_send_meaasge({"text": e})
