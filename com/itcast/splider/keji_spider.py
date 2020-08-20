@@ -107,4 +107,3 @@ def keep_link():
         my_message.wechat_send_meaasge({"text": e})
 
 
-print(getIndex())

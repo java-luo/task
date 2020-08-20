@@ -10,6 +10,10 @@ def get_ticket():
 
     return guobo_service.get_ticket_list()
 
+@guobo.route('/getShouduTicket')
+def get_shoudu_ticket():
+
+    return guobo_service.get_shoudu_ticket_list()
 
 @guobo.route('/getKejiTicket')
 def get_keji_ticket():
